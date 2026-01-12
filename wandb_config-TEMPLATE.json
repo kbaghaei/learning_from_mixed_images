@@ -1,0 +1,5 @@
+{
+    "entity": "ENTITY-NAME-HERE",
+    "project": "NAME-OF-PROJECT-HERE",
+    "wandb_api_key": "WANDB-API-KEY-HERE"
+}

@@ -1,0 +1,106 @@
+{
+    "experiment_1": {
+        "train" : {
+            "mix_size": 1,
+            "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            "classes_for_test": [0, 1, 2, 3, 4],
+            "n_samples_per_mix": 512,
+            "batch_size": 64,
+            "total_epochs": 40,
+            "lr": 0.0003,
+            "weight_decay": 0.05,
+            "warmup_epochs": 5,
+            "random_seed": 0
+        },
+        "test" : [
+            {
+                "mix_size": 1,
+                "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "classes_for_test": [0, 1, 2, 3, 4],
+                "n_samples_per_mix": 1000,
+                "batch_size": 64,
+                "random_seed": 0
+            }
+        ]
+    },
+    "experiment_2": {
+        "train" : {
+            "mix_size": 2,
+            "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            "classes_for_test": [0, 1, 2, 3, 4],
+            "n_samples_per_mix": 128,
+            "batch_size": 64,
+            "total_epochs": 50,
+            "lr": 0.0003,
+            "weight_decay": 0.05,
+            "warmup_epochs": 5,
+            "random_seed": 0
+        },
+        "test" : [
+            {
+                "mix_size": 1,
+                "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "classes_for_test": [0, 1, 2, 3, 4],
+                "n_samples_per_mix": 512,
+                "batch_size": 64,
+                "random_seed": 0
+            },
+            {
+                "mix_size": 2,
+                "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "classes_for_test": [0, 1, 2, 3, 4],
+                "n_samples_per_mix": 128,
+                "batch_size": 64,
+                "random_seed": 0
+            },
+            {
+                "mix_size": 3,
+                "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "classes_for_test": [0, 1, 2, 3, 4],
+                "n_samples_per_mix": 128,
+                "batch_size": 64,
+                "random_seed": 0
+            }
+        ]
+    },
+    "experiment_3": {
+        "train" : {
+            "mix_size": 3,
+            "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            "classes_for_test": [0, 1, 2, 3, 4],
+            "n_samples_per_mix": 64,
+            "batch_size": 64,
+            "total_epochs": 50,
+            "lr": 0.0003,
+            "weight_decay": 0.05,
+            "warmup_epochs": 5,
+            "random_seed": 0
+        },
+        "test" : [
+            {
+                "mix_size": 1,
+                "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "classes_for_test": [0, 1, 2, 3, 4],
+                "n_samples_per_mix": 100,
+                "batch_size": 64,
+                "random_seed": 0
+            },
+            {
+                "mix_size": 2,
+                "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "classes_for_test": [0, 1, 2, 3, 4],
+                "n_samples_per_mix": 128,
+                "batch_size": 64,
+                "random_seed": 0
+            },
+            {
+                "mix_size": 3,
+                "classes_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "classes_for_test": [0, 1, 2, 3, 4],
+                "n_samples_per_mix": 128,
+                "batch_size": 64,
+                "random_seed": 0
+            }
+        ]   
+    }
+}
