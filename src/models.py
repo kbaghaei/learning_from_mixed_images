@@ -55,6 +55,40 @@ class LinearPatchEmbed(nn.Module):
 
 
 # -------------------------
+# Wide Patch Embedding (Fully Linear, No Convolution)
+# specially created for wide images:
+# e.g. instead of 32 x 32 x 3, the image would be: 32 x ( 32 x 3 ) x 3 
+# -------------------------
+class WideLinearPatchEmbed(nn.Module):
+    def __init__(self, img_height=32,img_width=32*3,patch_size=4, in_chans=3, embed_dim=128):
+        super().__init__()
+        self.img_height = img_height
+        self.img_width = img_width
+        self.patch_size = patch_size
+        self.num_patches = (img_width // patch_size) * (img_height // patch_size)
+        self.patch_dim = in_chans * patch_size * patch_size
+        
+        # Linear projection instead of convolution
+        self.proj = nn.Linear(self.patch_dim, embed_dim)
+
+    def forward(self, x):
+        # x: (B, C, H, W)
+        B, C, H, W = x.size()
+        
+        # Extract patches manually
+        # Reshape to (B, C, num_patches_h, patch_size, num_patches_w, patch_size)
+        x = x.view(B, C, H // self.patch_size, self.patch_size, W // self.patch_size, self.patch_size)
+        # Permute and reshape to (B, num_patches, C * patch_size * patch_size)
+        x = x.permute(0, 2, 4, 1, 3, 5).contiguous()
+        x = x.view(B, self.num_patches, self.patch_dim)
+        
+        # Linear projection
+        x = self.proj(x)  # (B, num_patches, embed_dim)
+        return x
+
+
+
+# -------------------------
 # Transformer Block
 # -------------------------
 class TransformerBlock(nn.Module):
@@ -216,6 +250,73 @@ class MultiLabelMiniViT(nn.Module):
 
         self.patch_embed = LinearPatchEmbed(
             img_size, patch_size, in_chans, embed_dim
+        )
+        num_patches = self.patch_embed.num_patches
+
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
+        self.pos_embed = nn.Parameter(
+            torch.zeros(1, num_patches + 1, embed_dim)
+        )
+        self.pos_drop = nn.Dropout(dropout)
+
+        self.blocks = nn.ModuleList([
+            TransformerBlock(embed_dim, num_heads, dropout=dropout)
+            for _ in range(depth)
+        ])
+
+        self.norm = nn.LayerNorm(embed_dim)
+
+        # 🔑 Multi-label head
+        self.head = nn.Linear(embed_dim, num_labels)
+
+        nn.init.trunc_normal_(self.pos_embed, std=0.02)
+        nn.init.trunc_normal_(self.cls_token, std=0.02)
+
+    def forward(self, x):
+        B = x.size(0)
+        x = self.patch_embed(x)
+
+        cls_tokens = self.cls_token.expand(B, -1, -1)
+        x = torch.cat((cls_tokens, x), dim=1)
+
+        x = x + self.pos_embed
+        x = self.pos_drop(x)
+
+        for blk in self.blocks:
+            x = blk(x)
+
+        x = self.norm(x)
+        cls_out = x[:, 0]
+
+        logits = self.head(cls_out)  # (B, num_labels)
+
+        return logits
+
+
+# -------------------------
+# Multi-label Wide ViT 
+# wide means that the image's is create by concatenation of several images width-wise.
+# -------------------------
+class MultiLabelWideMiniViT(nn.Module):
+    """
+    
+    """
+    def __init__(
+        self,
+        img_height=32,
+        img_width=32*3,
+        patch_size=4,
+        in_chans=3,
+        num_labels=10,   # ← multi-label
+        embed_dim=128,
+        depth=4,
+        num_heads=4,
+        dropout=0.1,
+    ):
+        super().__init__()
+
+        self.patch_embed = WideLinearPatchEmbed(
+            img_height, img_width, patch_size, in_chans, embed_dim
         )
         num_patches = self.patch_embed.num_patches
 
