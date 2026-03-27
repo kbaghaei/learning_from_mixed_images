@@ -66,7 +66,7 @@ def main(experiment_name: str, debug=False):
         experiment_name: Name of the experiment (e.g., 'experiment_0')
     """
 
-    PROJ_CACHE = '/scratch/kteimour/learning_from_mixed_images_cache/data'
+    PROJ_CACHE = '../data'
 
     # Download and load the training data
     train_dataset = torchvision.datasets.CIFAR10(root=PROJ_CACHE,

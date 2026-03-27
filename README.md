@@ -113,5 +113,3 @@ python run.py --experiment_name experiment_2
 ```bash
 python run.py --experiment_name experiment_2 --debug True
 ```
-
-CIFAR-10 data is downloaded automatically to `/scratch/kteimour/learning_from_mixed_images_cache/data` (edit `PROJ_CACHE` in [src/run.py](src/run.py) to change this).
